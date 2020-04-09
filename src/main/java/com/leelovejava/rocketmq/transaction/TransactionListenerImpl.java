@@ -1,5 +1,6 @@
 package com.leelovejava.rocketmq.transaction;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.common.message.Message;
@@ -11,11 +12,12 @@ import java.util.Map;
 /**
  * 事务监听者
  * 本地事务处理
- *  (2)Implement the TransactionListener interface
+ * (2)Implement the TransactionListener interface
  * The “executeLocalTransaction” method is used to execute local transaction when send half message succeed.
  * It returns one of three transaction status mentioned in the previous section.
  * The “checkLocalTransaction” method is used to check the local transaction status and respond to MQ check requests.
  * It also returns one of three transaction status mentioned in the previous section.
+ *
  * @author leelovejava
  */
 public class TransactionListenerImpl implements TransactionListener {
@@ -23,7 +25,7 @@ public class TransactionListenerImpl implements TransactionListener {
     private static Map<String, LocalTransactionState> STATE_MAP = new HashMap<>();
 
     /**
-     * 执行具体的业务逻辑
+     * 执行具体的业务逻辑(本地事务)
      *
      * @param msg 发送的消息对象
      * @param arg
@@ -35,18 +37,14 @@ public class TransactionListenerImpl implements TransactionListener {
             System.out.println("用户A账户减500元.");
             // 模拟调用服务
             Thread.sleep(500);
-
             // System.out.println(1/0);
-
             System.out.println("用户B账户加500元.");
             Thread.sleep(800);
-
-
             STATE_MAP.put(msg.getTransactionId(), LocalTransactionState.COMMIT_MESSAGE);
-
             // 二次提交确认
-//            return LocalTransactionState.UNKNOW;
-                return LocalTransactionState.COMMIT_MESSAGE;
+            // return LocalTransactionState.UNKNOW;
+            return LocalTransactionState.COMMIT_MESSAGE;
+
         } catch (Exception e) {
             e.printStackTrace();
         }

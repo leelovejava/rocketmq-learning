@@ -9,6 +9,11 @@
 [如果公司没有RocketMQ中间件，那你们如何实现最终一致性事务？](https://github.com/shishan100/Java-Interview-Advanced/blob/master/docs/distributed-system/eventual-consistency.md)
 
 ## 课程介绍
+1. 理解消息中间件MQ的优势和应用场景
+2. 掌握RocketMQ的核心功能，以及各种消息发送案例
+3. 通过电商项目深刻理解RocketMQ在使用项目中的落地应用
+4. 通过RocketMQ高级功能和源码学习，对RocketMQ的技术细节和原理有更加透彻的理解
+
 * 了解什么RocketMQ
 * 了解RocketMQ的核心概念
 * 动手安装RocketMQ服务

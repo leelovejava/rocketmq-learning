@@ -10,6 +10,9 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * 消费消息
+ * 1. 负载均衡模式
+ * 2. 广播模式
+ *
  * @author leelovejava
  */
 public class ConsumerDemo {
@@ -19,6 +22,9 @@ public class ConsumerDemo {
         // 设置组名
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("haoke-consumer");
         consumer.setNamesrvAddr("127.0.0.1:9876");
+
+        // 设置最大的重试次数,默认16次
+        /// consumer.setMaxReconsumeTimes(20);
 
         // 订阅方式:
 
@@ -32,7 +38,7 @@ public class ConsumerDemo {
         consumer.subscribe("my-topic", "add || update");
 
         // 消息模式:
-        // 1. 集群模式: 同一个 ConsumerGroup(GroupName相同) 里的每 个 Consumer 只消费所订阅消息的一部分内容， 同一个 ConsumerGroup 里所有的 Consumer消费的内容合起来才是所订阅 Topic 内容的整体， 从而达到负载均衡的目的
+        // 1. 集群模式负载均衡(): 同一个 ConsumerGroup(GroupName相同) 里的每 个 Consumer 只消费所订阅消息的一部分内容， 同一个 ConsumerGroup 里所有的 Consumer消费的内容合起来才是所订阅 Topic 内容的整体， 从而达到负载均衡的目的
         consumer.setMessageModel(MessageModel.CLUSTERING);
 
         // 2. 广播模式: 同一个 ConsumerGroup里的每个 Consumer都 能消费到所订阅 Topic 的全部消息，也就是一个消息会被多次分发，被多个 Consumer消费
@@ -55,6 +61,5 @@ public class ConsumerDemo {
 
         // 启动消费者
         consumer.start();
-
     }
 }

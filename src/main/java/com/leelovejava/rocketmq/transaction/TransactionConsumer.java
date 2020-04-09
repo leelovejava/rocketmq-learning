@@ -48,20 +48,24 @@ public class TransactionConsumer {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
+        // 1.创建消费者Consumer，制定消费者组名
         DefaultMQPushConsumer consumer = new
-                DefaultMQPushConsumer("HAOKE_CONSUMER");
+                DefaultMQPushConsumer("group1");
         /**
          * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
          * 如果非第一次启动，那么按照上次消费的位置继续消费
          */
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
-        consumer.setNamesrvAddr("127.0.0.1:9876");
+        // 2.指定Nameserver地址
+        consumer.setNamesrvAddr("192.168.25.135:9876;192.168.25.138:9876");
 
-        // 订阅topic，接收此Topic下的所有消息
-        consumer.subscribe("pay_topic", "*");
+        // 3. 订阅topic，接收此Topic下的所有消息
+        consumer.subscribe("TransactionTopic", "*");
 
+        // 4.设置回调函数，处理消息
         // 测试结果: 返回commit状态时，消费者能够接收到消息，返回rollback状态时，消费者接受不到消息
         consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
+            // 接受消息内容
             for (MessageExt msg : msgs) {
                 try {
                     System.out.println(new String(msg.getBody(), "UTF-8"));
@@ -71,6 +75,7 @@ public class TransactionConsumer {
             }
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
+        // 5.启动消费者consumer
         consumer.start();
     }
 }
